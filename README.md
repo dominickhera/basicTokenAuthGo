@@ -1,23 +1,21 @@
 # goApple - Apple Work Sample Project
 
 written by dominick hera
+
 date: 10/7/18
 
-====
 
-contact info
-==
+# contact info
 
-website: www.dominickhera.com
-github: www.github.com/dominickhera
-email: me@dominickhera.com
-phone number: 5195466023
-favourite flavour of ice cream: chocolate chip cookie dough
 
-======
+- website: www.dominickhera.com
+- github: www.github.com/dominickhera
+- email: me@dominickhera.com
+- phone number: 5195466023
+- favourite flavour of ice cream: chocolate chip cookie dough
 
 build info
-==
+=
 
 languages:
 - go
@@ -30,21 +28,21 @@ frameworks:
 - bootstrap
 - jwt
 
-====
 
 compilation info
-
+=
 to build project:
+
         go build
 
 to run project:
+
         ./goApple
 
         open browser at 'localhost:8000'
 
-====
-technical decisions info
+
+# technical decisions info
 
 
-
-======
+to be filled out later
