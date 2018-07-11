@@ -1,0 +1,43 @@
+{
+  "components": [
+    {
+      "data": {
+        "contents_checksum": "66374bacc0243d0c0e6f5e0fbc3c8962ba0ae33999176671739433548d44fd3d", 
+        "source": "", 
+        "type": "tar"
+      }, 
+      "dependencies": [
+        "app-engine-go", 
+        "app-engine-python", 
+        "core"
+      ], 
+      "details": {
+        "description": "Provides the tools to develop Go applications on App Engine.", 
+        "display_name": "App Engine Go Extensions"
+      }, 
+      "id": "app-engine-go-darwin-x86_64", 
+      "is_configuration": false, 
+      "is_hidden": true, 
+      "is_required": false, 
+      "platform": {
+        "architectures": [
+          "x86_64"
+        ], 
+        "operating_systems": [
+          "MACOSX"
+        ]
+      }, 
+      "version": {
+        "build_number": 20180622144034, 
+        "version_string": "1.9.65"
+      }
+    }
+  ], 
+  "revision": 20180706172928, 
+  "schema_version": {
+    "no_update": false, 
+    "url": "https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz", 
+    "version": 3
+  }, 
+  "version": "208.0.0"
+}
