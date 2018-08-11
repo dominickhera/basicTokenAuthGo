@@ -66,7 +66,7 @@ var Home = React.createClass({
     return (
     <div className="container">
       <div className="col-xs-12 jumbotron text-center">
-      <h1>Apple Go Work Example</h1>
+      <h1>Basic Token Auth Go</h1>
     	 <h3>made by dominick Hera</h3>
        <hr></hr>
         <a onClick={this.authenticate} className="btn btn-primary btn-lg btn-login">Sign In</a>
