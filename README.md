@@ -1,4 +1,4 @@
-# goApple - Apple Work Sample Project
+basic token auth go
 
 written by dominick hera
 
@@ -11,7 +11,6 @@ date: 10/7/18
 - website: www.dominickhera.com
 - github: www.github.com/dominickhera
 - email: me@dominickhera.com
-- phone number: 5195466023
 - favourite flavour of ice cream: chocolate chip cookie dough
 
 build info
