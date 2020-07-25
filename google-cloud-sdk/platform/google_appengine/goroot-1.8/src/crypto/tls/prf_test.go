@@ -9,11 +9,11 @@ import (
 	"testing"
 )
 
-type testSplitPreMasterSecretTest struct {
+type testSplitPreMainSecretTest struct {
 	in, out1, out2 string
 }
 
-var testSplitPreMasterSecretTests = []testSplitPreMasterSecretTest{
+var testSplitPreMainSecretTests = []testSplitPreMainSecretTest{
 	{"", "", ""},
 	{"00", "00", "00"},
 	{"0011", "00", "11"},
@@ -21,10 +21,10 @@ var testSplitPreMasterSecretTests = []testSplitPreMasterSecretTest{
 	{"00112233", "0011", "2233"},
 }
 
-func TestSplitPreMasterSecret(t *testing.T) {
-	for i, test := range testSplitPreMasterSecretTests {
+func TestSplitPreMainSecret(t *testing.T) {
+	for i, test := range testSplitPreMainSecretTests {
 		in, _ := hex.DecodeString(test.in)
-		out1, out2 := splitPreMasterSecret(in)
+		out1, out2 := splitPreMainSecret(in)
 		s1 := hex.EncodeToString(out1)
 		s2 := hex.EncodeToString(out2)
 		if s1 != test.out1 || s2 != test.out2 {
@@ -36,27 +36,27 @@ func TestSplitPreMasterSecret(t *testing.T) {
 type testKeysFromTest struct {
 	version                    uint16
 	suite                      *cipherSuite
-	preMasterSecret            string
+	preMainSecret            string
 	clientRandom, serverRandom string
-	masterSecret               string
+	mainSecret               string
 	clientMAC, serverMAC       string
 	clientKey, serverKey       string
 	macLen, keyLen             int
 }
 
-func TestKeysFromPreMasterSecret(t *testing.T) {
+func TestKeysFromPreMainSecret(t *testing.T) {
 	for i, test := range testKeysFromTests {
-		in, _ := hex.DecodeString(test.preMasterSecret)
+		in, _ := hex.DecodeString(test.preMainSecret)
 		clientRandom, _ := hex.DecodeString(test.clientRandom)
 		serverRandom, _ := hex.DecodeString(test.serverRandom)
 
-		masterSecret := masterFromPreMasterSecret(test.version, test.suite, in, clientRandom, serverRandom)
-		if s := hex.EncodeToString(masterSecret); s != test.masterSecret {
-			t.Errorf("#%d: bad master secret %s, want %s", i, s, test.masterSecret)
+		mainSecret := mainFromPreMainSecret(test.version, test.suite, in, clientRandom, serverRandom)
+		if s := hex.EncodeToString(mainSecret); s != test.mainSecret {
+			t.Errorf("#%d: bad main secret %s, want %s", i, s, test.mainSecret)
 			continue
 		}
 
-		clientMAC, serverMAC, clientKey, serverKey, _, _ := keysFromMasterSecret(test.version, test.suite, masterSecret, clientRandom, serverRandom, test.macLen, test.keyLen, 0)
+		clientMAC, serverMAC, clientKey, serverKey, _, _ := keysFromMainSecret(test.version, test.suite, mainSecret, clientRandom, serverRandom, test.macLen, test.keyLen, 0)
 		clientMACString := hex.EncodeToString(clientMAC)
 		serverMACString := hex.EncodeToString(serverMAC)
 		clientKeyString := hex.EncodeToString(clientKey)

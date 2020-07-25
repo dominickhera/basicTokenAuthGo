@@ -78,22 +78,22 @@ Josie
 
 func ExampleTemplate_block() {
 	const (
-		master  = `Names:{{block "list" .}}{{"\n"}}{{range .}}{{println "-" .}}{{end}}{{end}}`
+		main  = `Names:{{block "list" .}}{{"\n"}}{{range .}}{{println "-" .}}{{end}}{{end}}`
 		overlay = `{{define "list"}} {{join . ", "}}{{end}} `
 	)
 	var (
 		funcs     = template.FuncMap{"join": strings.Join}
 		guardians = []string{"Gamora", "Groot", "Nebula", "Rocket", "Star-Lord"}
 	)
-	masterTmpl, err := template.New("master").Funcs(funcs).Parse(master)
+	mainTmpl, err := template.New("main").Funcs(funcs).Parse(main)
 	if err != nil {
 		log.Fatal(err)
 	}
-	overlayTmpl, err := template.Must(masterTmpl.Clone()).Parse(overlay)
+	overlayTmpl, err := template.Must(mainTmpl.Clone()).Parse(overlay)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err := masterTmpl.Execute(os.Stdout, guardians); err != nil {
+	if err := mainTmpl.Execute(os.Stdout, guardians); err != nil {
 		log.Fatal(err)
 	}
 	if err := overlayTmpl.Execute(os.Stdout, guardians); err != nil {

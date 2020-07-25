@@ -9,7 +9,7 @@ import (
 	"unsafe"
 )
 
-// getentropy(2)'s syscall number, from /usr/src/sys/kern/syscalls.master
+// getentropy(2)'s syscall number, from /usr/src/sys/kern/syscalls.main
 const entropyTrap uintptr = 7
 
 // GetEntropy calls the OpenBSD getentropy system call.

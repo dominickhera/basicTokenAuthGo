@@ -29,7 +29,7 @@ type serverHandshakeState struct {
 	rsaSignOk             bool
 	sessionState          *sessionState
 	finishedHash          finishedHash
-	masterSecret          []byte
+	mainSecret          []byte
 	certsFromClient       [][]byte
 	cert                  *Certificate
 	cachedClientHelloInfo *ClientHelloInfo
@@ -352,7 +352,7 @@ func (hs *serverHandshakeState) doResumeHandshake() error {
 		}
 	}
 
-	hs.masterSecret = hs.sessionState.masterSecret
+	hs.mainSecret = hs.sessionState.mainSecret
 
 	return nil
 }
@@ -490,13 +490,13 @@ func (hs *serverHandshakeState) doFullHandshake() error {
 	}
 	hs.finishedHash.Write(ckx.marshal())
 
-	preMasterSecret, err := keyAgreement.processClientKeyExchange(c.config, hs.cert, ckx, c.vers)
+	preMainSecret, err := keyAgreement.processClientKeyExchange(c.config, hs.cert, ckx, c.vers)
 	if err != nil {
 		c.sendAlert(alertHandshakeFailure)
 		return err
 	}
-	hs.masterSecret = masterFromPreMasterSecret(c.vers, hs.suite, preMasterSecret, hs.clientHello.random, hs.hello.random)
-	if err := c.config.writeKeyLog(hs.clientHello.random, hs.masterSecret); err != nil {
+	hs.mainSecret = mainFromPreMainSecret(c.vers, hs.suite, preMainSecret, hs.clientHello.random, hs.hello.random)
+	if err := c.config.writeKeyLog(hs.clientHello.random, hs.mainSecret); err != nil {
 		c.sendAlert(alertInternalError)
 		return err
 	}
@@ -552,7 +552,7 @@ func (hs *serverHandshakeState) doFullHandshake() error {
 				break
 			}
 			var digest []byte
-			if digest, _, err = hs.finishedHash.hashForClientCertificate(signatureAndHash, hs.masterSecret); err != nil {
+			if digest, _, err = hs.finishedHash.hashForClientCertificate(signatureAndHash, hs.mainSecret); err != nil {
 				break
 			}
 			if !ecdsa.Verify(key, digest, ecdsaSig.R, ecdsaSig.S) {
@@ -565,7 +565,7 @@ func (hs *serverHandshakeState) doFullHandshake() error {
 			}
 			var digest []byte
 			var hashFunc crypto.Hash
-			if digest, hashFunc, err = hs.finishedHash.hashForClientCertificate(signatureAndHash, hs.masterSecret); err != nil {
+			if digest, hashFunc, err = hs.finishedHash.hashForClientCertificate(signatureAndHash, hs.mainSecret); err != nil {
 				break
 			}
 			err = rsa.VerifyPKCS1v15(key, hashFunc, digest, certVerify.signature)
@@ -587,7 +587,7 @@ func (hs *serverHandshakeState) establishKeys() error {
 	c := hs.c
 
 	clientMAC, serverMAC, clientKey, serverKey, clientIV, serverIV :=
-		keysFromMasterSecret(c.vers, hs.suite, hs.masterSecret, hs.clientHello.random, hs.hello.random, hs.suite.macLen, hs.suite.keyLen, hs.suite.ivLen)
+		keysFromMainSecret(c.vers, hs.suite, hs.mainSecret, hs.clientHello.random, hs.hello.random, hs.suite.macLen, hs.suite.keyLen, hs.suite.ivLen)
 
 	var clientCipher, serverCipher interface{}
 	var clientHash, serverHash macFunction
@@ -640,7 +640,7 @@ func (hs *serverHandshakeState) readFinished(out []byte) error {
 		return unexpectedMessageError(clientFinished, msg)
 	}
 
-	verify := hs.finishedHash.clientSum(hs.masterSecret)
+	verify := hs.finishedHash.clientSum(hs.mainSecret)
 	if len(verify) != len(clientFinished.verifyData) ||
 		subtle.ConstantTimeCompare(verify, clientFinished.verifyData) != 1 {
 		c.sendAlert(alertHandshakeFailure)
@@ -664,7 +664,7 @@ func (hs *serverHandshakeState) sendSessionTicket() error {
 	state := sessionState{
 		vers:         c.vers,
 		cipherSuite:  hs.suite.id,
-		masterSecret: hs.masterSecret,
+		mainSecret: hs.mainSecret,
 		certificates: hs.certsFromClient,
 	}
 	m.ticket, err = c.encryptTicket(&state)
@@ -688,7 +688,7 @@ func (hs *serverHandshakeState) sendFinished(out []byte) error {
 	}
 
 	finished := new(finishedMsg)
-	finished.verifyData = hs.finishedHash.serverSum(hs.masterSecret)
+	finished.verifyData = hs.finishedHash.serverSum(hs.mainSecret)
 	hs.finishedHash.Write(finished.marshal())
 	if _, err := c.writeRecord(recordTypeHandshake, finished.marshal()); err != nil {
 		return err

@@ -828,7 +828,7 @@ func TestKeyLog(t *testing.T) {
 			1 /* space */ +
 			32*2 /* hex client nonce */ +
 			1 /* space */ +
-			48*2 /* hex master secret */ +
+			48*2 /* hex main secret */ +
 			1 /* new line */
 		if len(loggedLine) != expectedLen {
 			t.Fatalf("%s: keylog line has incorrect length (want %d, got %d): %q", side, expectedLen, len(loggedLine), loggedLine)

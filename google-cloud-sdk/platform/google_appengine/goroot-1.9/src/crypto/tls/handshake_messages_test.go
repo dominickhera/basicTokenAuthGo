@@ -257,7 +257,7 @@ func (*sessionState) Generate(rand *rand.Rand, size int) reflect.Value {
 	s := &sessionState{}
 	s.vers = uint16(rand.Intn(10000))
 	s.cipherSuite = uint16(rand.Intn(10000))
-	s.masterSecret = randomBytes(rand.Intn(100), rand)
+	s.mainSecret = randomBytes(rand.Intn(100), rand)
 	numCerts := rand.Intn(20)
 	s.certificates = make([][]byte, numCerts)
 	for i := 0; i < numCerts; i++ {
