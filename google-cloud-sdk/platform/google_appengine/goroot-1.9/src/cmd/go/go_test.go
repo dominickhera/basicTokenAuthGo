@@ -1301,7 +1301,7 @@ func TestGetGitDefaultBranch(t *testing.T) {
 	tg.tempDir("src")
 	tg.setenv("GOPATH", tg.path("."))
 
-	// This repo has two branches, master and another-branch.
+	// This repo has two branches, main and another-branch.
 	// The another-branch is the default that you get from 'git clone'.
 	// The go get command variants should not override this.
 	const importPath = "github.com/rsc/go-get-default-branch"

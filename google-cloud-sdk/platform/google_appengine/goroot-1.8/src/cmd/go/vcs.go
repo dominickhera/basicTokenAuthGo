@@ -153,9 +153,9 @@ var vcsGit = &vcsCmd{
 	},
 	tagSyncCmd: []string{"checkout {tag}", "submodule update --init --recursive"},
 	// both createCmd and downloadCmd update the working dir.
-	// No need to do more here. We used to 'checkout master'
-	// but that doesn't work if the default branch is not named master.
-	// DO NOT add 'checkout master' here.
+	// No need to do more here. We used to 'checkout main'
+	// but that doesn't work if the default branch is not named main.
+	// DO NOT add 'checkout main' here.
 	// See golang.org/issue/9032.
 	tagSyncDefault: []string{"submodule update --init --recursive"},
 

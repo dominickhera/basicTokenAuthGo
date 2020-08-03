@@ -208,7 +208,7 @@ ADMIN_MEDIA_PREFIX = '/media/'
 
 # Default e-mail address to use for various automated correspondence from
 # the site managers.
-DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+DEFAULT_FROM_EMAIL = 'webmain@localhost'
 
 # Subject-line prefix for email messages send with django.core.mail.mail_admins
 # or ...mail_managers.  Make sure to include the trailing space.

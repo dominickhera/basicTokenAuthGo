@@ -237,7 +237,7 @@ func chomp(s string) string {
 }
 
 func branchtag(branch string) (tag string, precise bool) {
-	b := run(goroot, CheckExit, "git", "log", "--decorate=full", "--format=format:%d", "master.."+branch)
+	b := run(goroot, CheckExit, "git", "log", "--decorate=full", "--format=format:%d", "main.."+branch)
 	tag = branch
 	for _, line := range splitlines(b) {
 		// Each line is either blank, or looks like
@@ -304,7 +304,7 @@ func findgoversion() string {
 	precise := false
 
 	// If we're on a release branch, use the closest matching tag
-	// that is on the release branch (and not on the master branch).
+	// that is on the release branch (and not on the main branch).
 	if strings.HasPrefix(branch, "release-branch.") {
 		tag, precise = branchtag(branch)
 	}

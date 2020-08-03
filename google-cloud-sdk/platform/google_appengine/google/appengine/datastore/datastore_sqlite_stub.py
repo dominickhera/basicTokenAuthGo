@@ -687,7 +687,7 @@ class DatastoreSqliteStub(datastore_stub_util.BaseDatastore,
       datastore_stub_util.BaseDatastore.Clear(self)
       datastore_stub_util.DatastoreStub.Clear(self)
       c = conn.execute(
-          "SELECT tbl_name FROM sqlite_master WHERE type = 'table'")
+          "SELECT tbl_name FROM sqlite_main WHERE type = 'table'")
       for row in c.fetchall():
         conn.execute('DROP TABLE "%s"' % row)
     finally:

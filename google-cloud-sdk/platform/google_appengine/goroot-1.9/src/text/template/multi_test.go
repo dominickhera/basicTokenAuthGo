@@ -260,14 +260,14 @@ func TestAddParseTree(t *testing.T) {
 
 // Issue 7032
 func TestAddParseTreeToUnparsedTemplate(t *testing.T) {
-	master := "{{define \"master\"}}{{end}}"
-	tmpl := New("master")
-	tree, err := parse.Parse("master", master, "", "", nil)
+	main := "{{define \"main\"}}{{end}}"
+	tmpl := New("main")
+	tree, err := parse.Parse("main", main, "", "", nil)
 	if err != nil {
 		t.Fatalf("unexpected parse err: %v", err)
 	}
-	masterTree := tree["master"]
-	tmpl.AddParseTree("master", masterTree) // used to panic
+	mainTree := tree["main"]
+	tmpl.AddParseTree("main", mainTree) // used to panic
 }
 
 func TestRedefinition(t *testing.T) {

@@ -49,7 +49,7 @@ class SQLite3Driver(DBDriver):
         return RDBMSMetadata('SQLite', 'SQLite 3', sqlite3.sqlite_version)
 
     def get_tables(self, cursor):
-        cursor.execute("select name from sqlite_master where type = 'table'")
+        cursor.execute("select name from sqlite_main where type = 'table'")
         table_names = []
         rs = cursor.fetchone()
         while rs is not None:

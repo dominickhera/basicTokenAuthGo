@@ -52,10 +52,10 @@ var urltests = []URLTest{
 	},
 	// user
 	{
-		"ftp://webmaster@www.google.com/",
+		"ftp://webmain@www.google.com/",
 		&URL{
 			Scheme: "ftp",
-			User:   User("webmaster"),
+			User:   User("webmain"),
 			Host:   "www.google.com",
 			Path:   "/",
 		},
@@ -127,19 +127,19 @@ var urltests = []URLTest{
 	},
 	// non-authority with path
 	{
-		"mailto:/webmaster@golang.org",
+		"mailto:/webmain@golang.org",
 		&URL{
 			Scheme: "mailto",
-			Path:   "/webmaster@golang.org",
+			Path:   "/webmain@golang.org",
 		},
-		"mailto:///webmaster@golang.org", // unfortunate compromise
+		"mailto:///webmain@golang.org", // unfortunate compromise
 	},
 	// non-authority
 	{
-		"mailto:webmaster@golang.org",
+		"mailto:webmain@golang.org",
 		&URL{
 			Scheme: "mailto",
-			Opaque: "webmaster@golang.org",
+			Opaque: "webmain@golang.org",
 		},
 		"",
 	},
@@ -267,12 +267,12 @@ var urltests = []URLTest{
 	},
 	// case-insensitive scheme
 	{
-		"MaIlTo:webmaster@golang.org",
+		"MaIlTo:webmain@golang.org",
 		&URL{
 			Scheme: "mailto",
-			Opaque: "webmaster@golang.org",
+			Opaque: "webmain@golang.org",
 		},
-		"mailto:webmaster@golang.org",
+		"mailto:webmain@golang.org",
 	},
 	// Relative path
 	{

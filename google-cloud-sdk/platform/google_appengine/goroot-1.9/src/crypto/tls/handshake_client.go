@@ -25,7 +25,7 @@ type clientHandshakeState struct {
 	hello        *clientHelloMsg
 	suite        *cipherSuite
 	finishedHash finishedHash
-	masterSecret []byte
+	mainSecret []byte
 	session      *ClientSessionState
 }
 
@@ -409,7 +409,7 @@ func (hs *clientHandshakeState) doFullHandshake() error {
 		}
 	}
 
-	preMasterSecret, ckx, err := keyAgreement.generateClientKeyExchange(c.config, hs.hello, c.peerCertificates[0])
+	preMainSecret, ckx, err := keyAgreement.generateClientKeyExchange(c.config, hs.hello, c.peerCertificates[0])
 	if err != nil {
 		c.sendAlert(alertInternalError)
 		return err
@@ -448,7 +448,7 @@ func (hs *clientHandshakeState) doFullHandshake() error {
 			c.sendAlert(alertInternalError)
 			return err
 		}
-		digest, hashFunc, err := hs.finishedHash.hashForClientCertificate(certVerify.signatureAndHash, hs.masterSecret)
+		digest, hashFunc, err := hs.finishedHash.hashForClientCertificate(certVerify.signatureAndHash, hs.mainSecret)
 		if err != nil {
 			c.sendAlert(alertInternalError)
 			return err
@@ -465,8 +465,8 @@ func (hs *clientHandshakeState) doFullHandshake() error {
 		}
 	}
 
-	hs.masterSecret = masterFromPreMasterSecret(c.vers, hs.suite, preMasterSecret, hs.hello.random, hs.serverHello.random)
-	if err := c.config.writeKeyLog(hs.hello.random, hs.masterSecret); err != nil {
+	hs.mainSecret = mainFromPreMainSecret(c.vers, hs.suite, preMainSecret, hs.hello.random, hs.serverHello.random)
+	if err := c.config.writeKeyLog(hs.hello.random, hs.mainSecret); err != nil {
 		c.sendAlert(alertInternalError)
 		return errors.New("tls: failed to write to key log: " + err.Error())
 	}
@@ -480,7 +480,7 @@ func (hs *clientHandshakeState) establishKeys() error {
 	c := hs.c
 
 	clientMAC, serverMAC, clientKey, serverKey, clientIV, serverIV :=
-		keysFromMasterSecret(c.vers, hs.suite, hs.masterSecret, hs.hello.random, hs.serverHello.random, hs.suite.macLen, hs.suite.keyLen, hs.suite.ivLen)
+		keysFromMainSecret(c.vers, hs.suite, hs.mainSecret, hs.hello.random, hs.serverHello.random, hs.suite.macLen, hs.suite.keyLen, hs.suite.ivLen)
 	var clientCipher, serverCipher interface{}
 	var clientHash, serverHash macFunction
 	if hs.suite.cipher != nil {
@@ -571,8 +571,8 @@ func (hs *clientHandshakeState) processServerHello() (bool, error) {
 		return false, errors.New("tls: server resumed a session with a different cipher suite")
 	}
 
-	// Restore masterSecret and peerCerts from previous state
-	hs.masterSecret = hs.session.masterSecret
+	// Restore mainSecret and peerCerts from previous state
+	hs.mainSecret = hs.session.mainSecret
 	c.peerCertificates = hs.session.serverCertificates
 	c.verifiedChains = hs.session.verifiedChains
 	return true, nil
@@ -596,7 +596,7 @@ func (hs *clientHandshakeState) readFinished(out []byte) error {
 		return unexpectedMessageError(serverFinished, msg)
 	}
 
-	verify := hs.finishedHash.serverSum(hs.masterSecret)
+	verify := hs.finishedHash.serverSum(hs.mainSecret)
 	if len(verify) != len(serverFinished.verifyData) ||
 		subtle.ConstantTimeCompare(verify, serverFinished.verifyData) != 1 {
 		c.sendAlert(alertHandshakeFailure)
@@ -628,7 +628,7 @@ func (hs *clientHandshakeState) readSessionTicket() error {
 		sessionTicket:      sessionTicketMsg.ticket,
 		vers:               c.vers,
 		cipherSuite:        hs.suite.id,
-		masterSecret:       hs.masterSecret,
+		mainSecret:       hs.mainSecret,
 		serverCertificates: c.peerCertificates,
 		verifiedChains:     c.verifiedChains,
 	}
@@ -656,7 +656,7 @@ func (hs *clientHandshakeState) sendFinished(out []byte) error {
 	}
 
 	finished := new(finishedMsg)
-	finished.verifyData = hs.finishedHash.clientSum(hs.masterSecret)
+	finished.verifyData = hs.finishedHash.clientSum(hs.mainSecret)
 	hs.finishedHash.Write(finished.marshal())
 	if _, err := c.writeRecord(recordTypeHandshake, finished.marshal()); err != nil {
 		return err

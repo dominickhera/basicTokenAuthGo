@@ -616,7 +616,7 @@ func TestAddressParsingAndFormatting(t *testing.T) {
 		`<"dot.and space"@example.com>`,
 		`<"very.unusual.@.unusual.com"@example.com>`,
 		`<admin@mailserver1>`,
-		`<postmaster@localhost>`,
+		`<postmain@localhost>`,
 		"<#!$%&'*+-/=?^_`{}|~@example.org>",
 		`<"very.(),:;<>[]\".VERY.\"very@\\ \"very\".unusual"@strange.example.com>`, // escaped quotes
 		`<"()<>[]:,;@\\\"!#$%&'*+-/=?^_{}| ~.a"@example.org>`,                      // escaped backslashes
